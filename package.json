@@ -1,11 +1,11 @@
 {
     "name": "imaginemos",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Technical test for imaginemos",
-    "main": "server.js",
+    "main": "src/server.js",
     "scripts": {
         "dev": "nodemon src/server.js",
-        "test": "mocha --recursive --exit ",
+        "test": "mocha --recursive --exit --timeout 5000",
         "start": "node src/server.js"
     },
     "keywords": [],

@@ -17,6 +17,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api_v1', require('./api/v1.0/routes/users.routes'));
+app.use('/api_v1', require('./api/v1.0/routes/tickets.routes'));
 
 // Static Files
 app.use(express.static(path.join(__dirname, 'public')));

@@ -42,7 +42,7 @@ userCtrl.logIn = (email, password) => {
             const payLoad = { id: user._id };
             const accessToken = jwt.sign(
                 payLoad,
-                process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }
+                process.env.ACCESS_TOKEN_SECRET, { expiresIn: '45m' }
             );
             const refreshToken = jwt.sign(
                 payLoad,

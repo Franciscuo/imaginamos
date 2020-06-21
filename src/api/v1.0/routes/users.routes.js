@@ -1,7 +1,7 @@
 const { Router } = require('express');
 
 const router = Router();
-const response = require('./response');
+const response = require('./helpers/response');
 const userCtrl = require('../controllers/users');
 
 router.post('/signup', (req, res) => {
