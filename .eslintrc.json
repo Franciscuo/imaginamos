@@ -1,14 +1,31 @@
 {
-  "extends": ["airbnb-base", "prettier", "plugin:node/recommended"],
-  "plugins": ["prettier"],
+    "env": {
+        "mocha": true
+    },
 
-  "rules": {
-    "prettier/prettier": "error",
-    "no-unused-vars": "warn",
-    "no-console": "off",
-    "func-names": "off",
-    "object-shorthand": "off",
-    "class-methods-use-this": "off",
-    "endOfLine": "auto"
-  }
+    "extends": ["airbnb-base", "prettier", "plugin:node/recommended"],
+    "plugins": ["prettier"],
+
+    "rules": {
+        "prettier/prettier": [
+            "error",
+            { "singleQuote": true, "endOfLine": "auto" }
+        ],
+        "node/no-unpublished-require": [
+            "error",
+            {
+                "allowModules": ["chai", "supertest"]
+            }
+        ],
+        "no-unused-vars": "warn",
+        "no-console": "off",
+        "func-names": "off",
+        "object-shorthand": "off",
+        "class-methods-use-this": "off",
+        "no-async-promise-executor": "off",
+        "prefer-promise-reject-errors": "off",
+        "no-underscore-dangle": "off",
+        "consistent-return": "off",
+        "no-unused-expressions": "off"
+    }
 }

@@ -3,8 +3,6 @@ const User = require('../../../database/models/Users');
 
 const userCtrl = {};
 
-
-
 userCtrl.signUp = (email, password, type) => {
     return new Promise(async(resolve, reject) => {
         try {
@@ -14,25 +12,24 @@ userCtrl.signUp = (email, password, type) => {
             const newUser = new User({
                 email,
                 type,
-                password: ''
+                password: '',
             });
             newUser.password = await newUser.encryptPassword(password);
-            await newUser.save()
+            await newUser
+                .save()
                 .then(() => {
                     resolve({
-                        message: 'Saved user'
+                        message: 'Saved user',
                     });
                 })
-                .catch(e => {
+                .catch(() => {
                     reject('Failed to write database');
-                })
+                });
         } catch (e) {
             reject(`Error ${e}`);
         }
-    })
+    });
 };
-
-
 
 userCtrl.logIn = (email, password) => {
     return new Promise(async(resolve, reject) => {
@@ -42,13 +39,20 @@ userCtrl.logIn = (email, password) => {
             const match = await user.matchPassword(password);
             if (!match) return reject('Wrong password');
 
-            const payLoad = { id: user._id }
-            const accessToken = jwt.sign(payLoad, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-            const refreshToken = jwt.sign(payLoad, process.env.REFRESH_TOKEN_SECRET);
+            const payLoad = { id: user._id };
+            const accessToken = jwt.sign(
+                payLoad,
+                process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }
+            );
+            const refreshToken = jwt.sign(
+                payLoad,
+                process.env.REFRESH_TOKEN_SECRET
+            );
             user.tokens.push(refreshToken);
 
-            await user.save()
-                .then((items) => {
+            await user
+                .save()
+                .then(() => {
                     resolve({
                         login: true,
                         accessToken,
@@ -56,42 +60,38 @@ userCtrl.logIn = (email, password) => {
                         user_id: user._id,
                     });
                 })
-                .catch(e => {
+                .catch(() => {
                     reject('Failed to write database');
-                })
+                });
         } catch (e) {
-            console.log(e)
             reject(`Error ${e}`);
         }
-    })
-
-}
-
+    });
+};
 
 userCtrl.logOut = (id, refreshToken) => {
     return new Promise(async(resolve, reject) => {
         try {
             const user = await User.findById(id);
             if (!user) return reject('User not found');
-            const tokens = user.tokens;
+            const { tokens } = user;
             const index = tokens.indexOf(refreshToken);
-            (index > -1) ? tokens.splice(index, 1): reject('Failed to logout');;
+            index > -1 ? tokens.splice(index, 1) : reject('Failed to logout');
             user.tokens = tokens;
-            await user.save()
-                .then((items) => {
+            await user
+                .save()
+                .then(() => {
                     resolve({
-                        message: 'Close session successfully'
+                        message: 'Close session successfully',
                     });
                 })
-                .catch(e => {
+                .catch(() => {
                     reject('Failed to write database');
-                })
+                });
         } catch (e) {
             reject(`Error ${e}`);
         }
-    })
-}
-
-
+    });
+};
 
 module.exports = userCtrl;

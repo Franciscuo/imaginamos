@@ -1,21 +1,22 @@
 const success = (res, data, status) => {
     res.header({
-            "custom-header": ""
+            'custom-header': '',
         }) /
-        res.status(status || 200).send({ //si esta indefined status, responde 200
-            'error': '',
-            'data': data
-        })
-}
+        res.status(status || 200).send({
+            // si esta indefined status, responde 200
+            error: '',
+            data,
+        });
+};
 
 const error = (res, message, status) => {
     res.status(status || 500).send({
-        'error': {
+        error: {
             error: true,
-            message: message
+            message,
         },
-        'data': ''
-    })
-}
+        data: '',
+    });
+};
 
 module.exports = { success, error };

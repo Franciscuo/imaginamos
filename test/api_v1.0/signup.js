@@ -1,36 +1,36 @@
 process.env.NODE_ENV = 'test';
 
-const expect = require('chai').expect;
+const { expect } = require('chai');
 const request = require('supertest');
 
 const app = require('../../src/app');
 const conn = require('../../src/database/config');
 
-
 describe('v1 POST /signUp', () => {
-    before((done) => {
+    before(done => {
         conn.connect()
             .then(() => done())
-            .catch((err) => done(err));
-    })
+            .catch(err => done(err));
+    });
 
-    after((done) => {
+    after(done => {
         conn.close()
             .then(() => done())
-            .catch((err) => done(err));
-    })
+            .catch(err => done(err));
+    });
 
-    it('OK, creating a new user works', (done) => {
-        request(app).post('/api_v1/signup')
+    it('OK, creating a new user works', done => {
+        request(app)
+            .post('/api_v1/signup')
             .send({
-                "data": {
-                    "email": "email@correo.com",
-                    "password": "contraseña",
-                    "type": 0
-                }
+                data: {
+                    email: 'email@correo.com',
+                    password: 'contraseña',
+                    type: 0,
+                },
             })
-            .then((res) => {
-                const body = res.body;
+            .then(res => {
+                const { body } = res;
                 expect(body).to.contain.property('error');
                 expect(body).to.contain.property('data');
 
@@ -39,55 +39,54 @@ describe('v1 POST /signUp', () => {
 
                 done();
             })
-            .catch((err) => done(err));
+            .catch(err => done(err));
     });
 
-
-    it('FAIL, signUp requires email', (done) => {
-        request(app).post('/api_v1/signup')
+    it('FAIL, signUp requires email', done => {
+        request(app)
+            .post('/api_v1/signup')
             .send({
-                "data": {
-                    "email": "",
-                    "password": "contraseña",
-                    "type": 0
-                }
+                data: {
+                    email: '',
+                    password: 'contraseña',
+                    type: 0,
+                },
             })
-            .then((res) => {
-                const error = res.body.error;
-                expect(error.error).to.equal(true)
+            .then(res => {
+                const { error } = res.body;
+                expect(error.error).to.equal(true);
                 done();
             })
-            .catch((err) => done(err));
+            .catch(err => done(err));
     });
 
-    it('FAIL, signUp requires password', (done) => {
-        request(app).post('/api_v1/signup')
+    it('FAIL, signUp requires password', done => {
+        request(app)
+            .post('/api_v1/signup')
             .send({
-                "data": {
-                    "email": "correo@gmail.com",
-                    "password": "",
-                    "type": 0
-                }
+                data: {
+                    email: 'correo@gmail.com',
+                    password: '',
+                    type: 0,
+                },
             })
-            .then((res) => {
-                const error = res.body.error;
-                expect(error.error).to.equal(true)
+            .then(res => {
+                const { error } = res.body;
+                expect(error.error).to.equal(true);
                 done();
             })
-            .catch((err) => done(err));
+            .catch(err => done(err));
     });
 
-    it('FAIL, signUp requires data', (done) => {
-        request(app).post('/api_v1/signup')
-            .send({
-
-            })
-            .then((res) => {
-                const error = res.body.error;
-                expect(error.error).to.equal(true)
+    it('FAIL, signUp requires data', done => {
+        request(app)
+            .post('/api_v1/signup')
+            .send({})
+            .then(res => {
+                const { error } = res.body;
+                expect(error.error).to.equal(true);
                 done();
             })
-            .catch((err) => done(err));
+            .catch(err => done(err));
     });
-
-})
+});

@@ -15,11 +15,8 @@ db.connect();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-const x = "hello";
-
 // Routes
 app.use('/api_v1', require('./api/v1.0/routes/users.routes'));
-
 
 // Static Files
 app.use(express.static(path.join(__dirname, 'public')));

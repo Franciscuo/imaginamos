@@ -1,43 +1,42 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
+
 const mongod = new MongoMemoryServer();
 
 function connect() {
     return new Promise(async(resolve, reject) => {
-        if (process.env.NODE_ENV == 'test') {
-
+        if (process.env.NODE_ENV === 'test') {
             const uri = await mongod.getConnectionString();
-            mongoose.connect(uri, {
+            mongoose
+                .connect(uri, {
                     useNewUrlParser: true,
                     useUnifiedTopology: true,
-                    useCreateIndex: true
+                    useCreateIndex: true,
                 })
                 .then((res, err) => {
                     if (err) return reject(err);
                     resolve();
                 })
-                .catch((err) => {
+                .catch(err => {
                     reject(err);
-                })
-
+                });
         } else {
-
-            mongoose.connect(process.env.MONGODB_URI, {
+            mongoose
+                .connect(process.env.MONGODB_URI, {
                     useNewUrlParser: true,
                     useUnifiedTopology: true,
-                    useCreateIndex: true
+                    useCreateIndex: true,
                 })
                 .then((res, err) => {
                     if (err) return reject(err);
                     resolve();
                 })
-                .catch((err) => {
+                .catch(err => {
                     reject(err);
-                })
-
+                });
             mongoose.connection.once('open', () => {
                 console.log('DB is connected');
-            })
+            });
         }
     });
 }
