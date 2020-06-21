@@ -7,7 +7,6 @@ function connect() {
         if (process.env.NODE_ENV == 'test') {
 
             const uri = await mongod.getConnectionString();
-
             mongoose.connect(uri, {
                     useNewUrlParser: true,
                     useUnifiedTopology: true,
@@ -16,6 +15,9 @@ function connect() {
                 .then((res, err) => {
                     if (err) return reject(err);
                     resolve();
+                })
+                .catch((err) => {
+                    reject(err);
                 })
 
         } else {
@@ -28,6 +30,9 @@ function connect() {
                 .then((res, err) => {
                     if (err) return reject(err);
                     resolve();
+                })
+                .catch((err) => {
+                    reject(err);
                 })
 
             mongoose.connection.once('open', () => {

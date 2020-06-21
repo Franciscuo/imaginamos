@@ -10,6 +10,7 @@ userCtrl.signUp = (email, password, type) => {
         try {
             const user = await User.findOne({ email });
             if (user) return reject('This email is already registered');
+            if (password.length < 2) return reject('Passord too short');
             const newUser = new User({
                 email,
                 type,
@@ -18,7 +19,9 @@ userCtrl.signUp = (email, password, type) => {
             newUser.password = await newUser.encryptPassword(password);
             await newUser.save()
                 .then(() => {
-                    resolve('Saved user');
+                    resolve({
+                        message: 'Saved user'
+                    });
                 })
                 .catch(e => {
                     reject('Failed to write database');
@@ -76,7 +79,9 @@ userCtrl.logOut = (id, refreshToken) => {
             user.tokens = tokens;
             await user.save()
                 .then((items) => {
-                    resolve('Close session successfully');
+                    resolve({
+                        message: 'Close session successfully'
+                    });
                 })
                 .catch(e => {
                     reject('Failed to write database');
