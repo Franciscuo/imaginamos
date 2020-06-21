@@ -11,6 +11,7 @@
     "author": "Francisco Lopez Puyo (francisco-9708@hotmail.es)",
     "license": "MIT",
     "dependencies": {
+        "bcryptjs": "^2.4.3",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "mongodb-memory-server": "^6.6.1",
