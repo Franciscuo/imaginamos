@@ -5,7 +5,7 @@ const Technical = require('../../../database/models/Technical');
 const ticketCtrl = {};
 
 ticketCtrl.newTicket = userId => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const technical = await Technical.aggregate([
                 { $sample: { size: 1 } },
@@ -28,7 +28,7 @@ ticketCtrl.newTicket = userId => {
             newTicket.token = ticketToken;
             newTicket.ratingLink = `/rating_service/${newTicket.getId}`;
             newTicket.trackingLink = `/tracking_service/${newTicket.getId}`;
-            await newTicket
+            newTicket
                 .save()
                 .then(() => {
                     resolve({

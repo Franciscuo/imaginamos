@@ -20,4 +20,20 @@ router.post('/addTechnical', (req, res) => {
     }
 });
 
+router.get('/dayTechnical', (req, res) => {
+    try {
+        const { email } = req.query;
+        technicalCtrl
+            .dayTechnical(email)
+            .then(info => {
+                response.success(res, info, 200);
+            })
+            .catch(e => {
+                response.error(res, e.message, e.code);
+            });
+    } catch (e) {
+        response.error(res, e, 500);
+    }
+});
+
 module.exports = router;

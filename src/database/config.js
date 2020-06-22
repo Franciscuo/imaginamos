@@ -4,7 +4,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const mongod = new MongoMemoryServer();
 
 function connect() {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         if (process.env.NODE_ENV === 'test') {
             const uri = await mongod.getConnectionString();
             mongoose

@@ -10,7 +10,7 @@ const TicketsSchema = new Schema({
     date: { type: Date, default: Date.now },
 });
 
-TicketsSchema.virtual('getId').get(function() {
+TicketsSchema.virtual('getId').get(function () {
     return this._id;
 });
 

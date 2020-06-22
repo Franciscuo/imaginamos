@@ -14,47 +14,109 @@ const swaggerOptions = {
                 email: 'francisco-9708@hotmail.es',
             },
         },
-        host: 'virtserver.swaggerhub.com',
-        basePath: '/Franciscuo/test2/1.0.0',
-        tags: [{
-            name: 'Desarrolladores',
-            description: 'Operaciones disponibles para desarrolladores',
-        }, ],
-        schemes: ['https'],
+        tags: [
+            {
+                name: 'Desarrolladores',
+                description: 'Operaciones disponibles para desarrolladores',
+            },
+        ],
+        securityDefinitions: {
+            refreshToken: {
+                type: 'apiKey',
+                in: 'header',
+                name: 'Authorization',
+            },
+            accessToken: {
+                type: 'apiKey',
+                in: 'header',
+                name: 'Authorization',
+            },
+        },
         paths: {
             '/signup': {
                 post: {
                     tags: ['Desarrolladores'],
                     summary: 'Registra un nuevo usuario',
-                    description: 'Pasando un correo no registrado y una contraseña se genera un nuevo \nusuario en el sistema\n',
                     operationId: 'nuevoUsuario',
+                    description:
+                        'Pasando un correo no registrado en la base de datos "clientes" y una contraseña se genera un nuevo \nusuario en el sistema\n',
                     consumes: ['application/json'],
                     produces: ['application/json'],
-                    parameters: [{ in: 'body',
-                        name: 'Data nuevo usuario',
-                        description: 'Email y password asociados al nuevo usuario, tipo de usuario, 0 si es cliente y 1 si es tecnico.',
-                        required: false,
-                        schema: {
-                            $ref: '#/definitions/UserModel',
+                    parameters: [
+                        {
+                            in: 'body',
+                            name: 'Data nuevo usuario',
+                            description:
+                                'Email y password asociados al nuevo usuario.',
+                            schema: {
+                                $ref: '#/definitions/UserModel',
+                            },
                         },
-                    }, ],
+                    ],
                     responses: {
                         '201': {
                             description: 'Nuevo usuario registrado',
                             schema: {
-                                $ref: '#/definitions/SavedUser',
+                                $ref: '#/definitions/SuccessRequest',
                             },
                         },
                         '400': {
                             description: 'Parametros incorrectos',
                             schema: {
-                                $ref: '#/definitions/PasswordShort',
+                                $ref: '#/definitions/Error',
                             },
                         },
                         '409': {
                             description: 'Usuario  ya registrado',
                             schema: {
-                                $ref: '#/definitions/EmailAlready',
+                                $ref: '#/definitions/Error',
+                            },
+                        },
+                        '500': {
+                            description: 'Error interno del servidor',
+                            schema: {
+                                $ref: '#/definitions/Error',
+                            },
+                        },
+                    },
+                },
+            },
+            '/addTechnical': {
+                post: {
+                    tags: ['Desarrolladores'],
+                    summary: 'Añadir un nuevo tecnico',
+                    operationId: 'nuevoTecnico',
+                    description:
+                        'Pasando un correo no registrado en la base de datos "tecnicos" se añade un nuevo \ntenico en el sistema\n',
+                    consumes: ['application/json'],
+                    produces: ['application/json'],
+                    parameters: [
+                        {
+                            in: 'body',
+                            name: 'Data nuevo tecnico',
+                            description: 'Email asociado al nuevo tecnico',
+                            schema: {
+                                $ref: '#/definitions/TechnicalModel',
+                            },
+                        },
+                    ],
+                    responses: {
+                        '201': {
+                            description: 'Nuevo tecnico agregado',
+                            schema: {
+                                $ref: '#/definitions/SuccessRequest',
+                            },
+                        },
+                        '400': {
+                            description: 'Parametros incorrectos',
+                            schema: {
+                                $ref: '#/definitions/Error',
+                            },
+                        },
+                        '409': {
+                            description: 'Tecnico  ya registrado',
+                            schema: {
+                                $ref: '#/definitions/Error',
                             },
                         },
                         '500': {
@@ -70,35 +132,39 @@ const swaggerOptions = {
                 post: {
                     tags: ['Desarrolladores'],
                     summary: 'Iniciar sesion',
-                    description: 'Pasando las credenciales correctas de una cuenta registrada se inicia sesion',
                     operationId: 'iniciarSesion',
+                    description:
+                        'Pasando las credenciales correctas de una cuenta registrada se inicia sesion',
                     consumes: ['application/json'],
                     produces: ['application/json'],
-                    parameters: [{ in: 'body',
-                        name: 'Data usuario',
-                        description: 'Email y password asociados al usuario registrado.',
-                        required: false,
-                        schema: {
-                            $ref: '#/definitions/UserModel',
+                    parameters: [
+                        {
+                            in: 'body',
+                            name: 'Data usuario',
+                            description:
+                                'Email y password asociados al usuario registrado.',
+                            schema: {
+                                $ref: '#/definitions/UserModel',
+                            },
                         },
-                    }, ],
+                    ],
                     responses: {
                         '200': {
                             description: 'Sesion iniciada',
                             schema: {
-                                $ref: '#/definitions/validPass',
+                                $ref: '#/definitions/ValidPass',
                             },
                         },
                         '400': {
                             description: 'Parametros de entrada invalidos',
                             schema: {
-                                $ref: '#/definitions/UserNotFound',
+                                $ref: '#/definitions/Error',
                             },
                         },
-                        '401': {
+                        '403': {
                             description: 'Contraseña incorrecta',
                             schema: {
-                                $ref: '#/definitions/noValidPass',
+                                $ref: '#/definitions/Error',
                             },
                         },
                         '500': {
@@ -114,29 +180,37 @@ const swaggerOptions = {
                 post: {
                     tags: ['Desarrolladores'],
                     summary: 'Cerrar sesion',
-                    description: 'Pasando el token de refresco y el ID, cierra sesion el usuario',
                     operationId: 'cerrarSesion',
+                    description:
+                        'Pasando el token de refresco y el ID, cierra sesion el usuario',
                     consumes: ['application/json'],
                     produces: ['application/json'],
-                    parameters: [{ in: 'body',
-                        name: 'Data usuario',
-                        description: 'Id asociados al usuario registrado.',
-                        required: false,
-                        schema: {
-                            $ref: '#/definitions/closeSesion',
+                    security: [
+                        {
+                            refreshToken: [],
                         },
-                    }, ],
+                    ],
+                    parameters: [
+                        {
+                            in: 'body',
+                            name: 'Data usuario',
+                            description: 'Id asociados al usuario registrado.',
+                            schema: {
+                                $ref: '#/definitions/Id',
+                            },
+                        },
+                    ],
                     responses: {
                         '200': {
                             description: 'Sesion cerrada',
                             schema: {
-                                $ref: '#/definitions/validPass',
+                                $ref: '#/definitions/SuccessRequest',
                             },
                         },
                         '400': {
                             description: 'Parametros de entrada invalidos',
                             schema: {
-                                $ref: '#/definitions/failLogout',
+                                $ref: '#/definitions/Error',
                             },
                         },
                         '500': {
@@ -146,247 +220,172 @@ const swaggerOptions = {
                             },
                         },
                     },
-                    security: [{
-                        refreshToken: [],
-                    }, ],
                 },
             },
-        },
-        securityDefinitions: {
-            refreshToken: {
-                type: 'apiKey',
-                name: 'Authorization',
-                in: 'header',
+            '/newTicket': {
+                post: {
+                    tags: ['Desarrolladores'],
+                    summary: 'Crea un nuevo ticket',
+                    operationId: 'crearTicket',
+                    description:
+                        'Pasando el token de acceso el usuario crea un nuevo ticket asociado a su ID',
+                    consumes: ['application/json'],
+                    produces: ['application/json'],
+                    security: [
+                        {
+                            accessToken: [],
+                        },
+                    ],
+                    responses: {
+                        '200': {
+                            description: 'Ticket generado y guardado',
+                            schema: {
+                                $ref: '#/definitions/SuccessRequest',
+                            },
+                        },
+                        '401': {
+                            description: 'Token no valido',
+                            schema: {
+                                $ref: '#/definitions/Error',
+                            },
+                        },
+                        '403': {
+                            description: 'No header Token',
+                            schema: {
+                                $ref: '#/definitions/Error',
+                            },
+                        },
+                        '409': {
+                            description: 'Sistema sin tecnicos',
+                            schema: {
+                                $ref: '#/definitions/Error',
+                            },
+                        },
+                        '500': {
+                            description: 'Error interno del servidor',
+                            schema: {
+                                $ref: '#/definitions/Error',
+                            },
+                        },
+                    },
+                },
             },
-            accessToken: {
-                type: 'apiKey',
-                name: 'Authorization',
-                in: 'header',
+            '/dayTechnical': {
+                get: {
+                    tags: ['Desarrolladores'],
+                    summary: 'Servicios de tecnico en el dia',
+                    operationId: 'listarServicios',
+                    description:
+                        'De acuerdo al email del tecnico se regresan los servicios de mantenimiento asignados en el dia',
+                    produces: ['application/json'],
+                    parameters: [
+                        {
+                            name: 'email',
+                            in: 'query',
+                            description: 'Email del tecnico',
+                            required: true,
+                            type: 'string',
+                            collectionFormat: 'multi',
+                        },
+                    ],
+                    responses: {
+                        '200': {
+                            description: 'Lista de servicios del tecnico',
+                            schema: {
+                                $ref: '#/definitions/DayTechnical',
+                            },
+                        },
+                        '400': {
+                            description: 'Correo no regrstrado',
+                            schema: {
+                                $ref: '#/definitions/Error',
+                            },
+                        },
+                        '500': {
+                            description: 'Error interno del servidor',
+                            schema: {
+                                $ref: '#/definitions/Error',
+                            },
+                        },
+                    },
+                },
             },
         },
         definitions: {
-            closeSesion: {
-                required: ['data', 'error'],
+            SuccessRequest: {
+                required: ['error', 'data'],
                 properties: {
                     error: {
                         type: 'string',
                         example: '',
                     },
                     data: {
-                        $ref: '#/definitions/closeSesionDos',
+                        type: 'object',
+                        required: ['message'],
+                        properties: {
+                            message: {
+                                type: 'string',
+                                example: 'Success',
+                            },
+                        },
                     },
                 },
             },
-            closeSesionDos: {
-                required: ['message'],
-                properties: {
-                    message: {
-                        type: 'string',
-                        example: 'Close session successfully',
-                    },
-                },
-            },
-            failLogout: {
-                required: ['data', 'error'],
-                properties: {
-                    error: {
-                        $ref: '#/definitions/failLogoutDos',
-                    },
-                    data: {
-                        type: 'string',
-                        example: '',
-                    },
-                },
-            },
-            failLogoutDos: {
-                required: ['error', 'message'],
-                properties: {
-                    error: {
-                        type: 'boolean',
-                        example: true,
-                    },
-                    message: {
-                        type: 'string',
-                        example: 'Failed token to logout',
-                    },
-                },
-            },
-            validPass: {
-                required: ['data', 'error'],
+            ValidPass: {
+                required: ['error', 'data'],
                 properties: {
                     error: {
                         type: 'string',
                         example: '',
                     },
                     data: {
-                        $ref: '#/definitions/validPassDos',
-                    },
-                },
-            },
-            validPassDos: {
-                required: ['accessToken', 'login', 'refreshToken', 'user_id'],
-                properties: {
-                    login: {
-                        type: 'boolean',
-                        example: true,
-                    },
-                    accessToken: {
-                        type: 'string',
-                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
-                    },
-                    refreshToken: {
-                        type: 'string',
-                        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
-                    },
-                    user_id: {
-                        type: 'string',
-                        example: '5ef05f705a40f3ed0dadc8c0',
-                    },
-                },
-            },
-            noValidPass: {
-                required: ['data', 'error'],
-                properties: {
-                    error: {
-                        $ref: '#/definitions/noValidPassDos',
-                    },
-                    data: {
-                        type: 'string',
-                        example: '',
-                    },
-                },
-            },
-            noValidPassDos: {
-                required: ['error', 'message'],
-                properties: {
-                    error: {
-                        type: 'boolean',
-                        example: true,
-                    },
-                    message: {
-                        type: 'string',
-                        example: 'wrong password',
-                    },
-                },
-            },
-            UserNotFound: {
-                required: ['data', 'error'],
-                properties: {
-                    error: {
-                        $ref: '#/definitions/UserNotFoundDos',
-                    },
-                    data: {
-                        type: 'string',
-                        example: '',
-                    },
-                },
-            },
-            UserNotFoundDos: {
-                required: ['error', 'message'],
-                properties: {
-                    error: {
-                        type: 'boolean',
-                        example: true,
-                    },
-                    message: {
-                        type: 'string',
-                        example: 'User not found',
-                    },
-                },
-            },
-            PasswordShort: {
-                required: ['data', 'error'],
-                properties: {
-                    error: {
-                        $ref: '#/definitions/PasswordShortDos',
-                    },
-                    data: {
-                        type: 'string',
-                        example: '',
-                    },
-                },
-            },
-            PasswordShortDos: {
-                required: ['error', 'message'],
-                properties: {
-                    error: {
-                        type: 'boolean',
-                        example: true,
-                    },
-                    message: {
-                        type: 'string',
-                        example: 'Password too short',
+                        type: 'object',
+                        required: [
+                            'login',
+                            'accessToken',
+                            'refreshToken',
+                            'user_id',
+                        ],
+                        properties: {
+                            login: {
+                                type: 'boolean',
+                                example: true,
+                            },
+                            accessToken: {
+                                type: 'string',
+                                example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
+                            },
+                            refreshToken: {
+                                type: 'string',
+                                example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
+                            },
+                            user_id: {
+                                type: 'string',
+                                example: '5ef05f705a40f3ed0dadc8c0',
+                            },
+                        },
                     },
                 },
             },
             Error: {
-                required: ['data', 'error'],
+                required: ['error', 'data'],
                 properties: {
                     error: {
-                        $ref: '#/definitions/ErrorDos',
+                        type: 'object',
+                        required: ['error', 'message'],
+                        properties: {
+                            error: {
+                                type: 'boolean',
+                                example: true,
+                            },
+                            message: {
+                                type: 'string',
+                            },
+                        },
                     },
                     data: {
                         type: 'string',
                         example: '',
-                    },
-                },
-            },
-            ErrorDos: {
-                required: ['error', 'message'],
-                properties: {
-                    error: {
-                        type: 'boolean',
-                        example: true,
-                    },
-                    message: {
-                        type: 'string',
-                        example: 'Internal Server Error',
-                    },
-                },
-            },
-            EmailAlready: {
-                required: ['data', 'error'],
-                properties: {
-                    error: {
-                        $ref: '#/definitions/EmailAlreadyDos',
-                    },
-                    data: {
-                        type: 'string',
-                        example: '',
-                    },
-                },
-            },
-            EmailAlreadyDos: {
-                required: ['error', 'message'],
-                properties: {
-                    error: {
-                        type: 'boolean',
-                        example: true,
-                    },
-                    message: {
-                        type: 'string',
-                        example: 'This email is already registered',
-                    },
-                },
-            },
-            SavedUser: {
-                required: ['data', 'error'],
-                properties: {
-                    error: {
-                        type: 'string',
-                        example: '',
-                    },
-                    data: {
-                        $ref: '#/definitions/MessageSaves',
-                    },
-                },
-            },
-            MessageSaves: {
-                required: ['message'],
-                properties: {
-                    message: {
-                        type: 'string',
-                        example: 'Saved user',
                     },
                 },
             },
@@ -394,43 +393,93 @@ const swaggerOptions = {
                 required: ['data'],
                 properties: {
                     data: {
-                        $ref: '#/definitions/UserModelDos',
+                        type: 'object',
+                        required: ['email', 'password'],
+                        properties: {
+                            email: {
+                                type: 'string',
+                                example: 'correo@gmail.com',
+                            },
+                            password: {
+                                type: 'string',
+                                example: 'contraseña',
+                            },
+                        },
                     },
                 },
             },
-            UserModelDos: {
-                type: 'object',
-                required: ['email', 'password'],
-                properties: {
-                    email: {
-                        type: 'string',
-                        example: 'correo@gmail.com',
-                    },
-                    password: {
-                        type: 'string',
-                        example: 'contraseña',
-                    },
-                },
-            },
-            UserModelId: {
+            TechnicalModel: {
                 required: ['data'],
                 properties: {
                     data: {
-                        $ref: '#/definitions/UserModelIdDos',
+                        type: 'object',
+                        required: ['email'],
+                        properties: {
+                            email: {
+                                type: 'string',
+                                example: 'tecnico@gmail.com',
+                            },
+                        },
                     },
                 },
             },
-            UserModelIdDos: {
-                type: 'object',
-                required: ['id'],
+            Id: {
+                required: ['data'],
                 properties: {
-                    id: {
+                    data: {
+                        type: 'object',
+                        required: ['id'],
+                        properties: {
+                            id: {
+                                type: 'string',
+                                example: '5eef1196042e5899f106f490',
+                            },
+                        },
+                    },
+                },
+            },
+            DayTechnical: {
+                required: ['error', 'data'],
+                properties: {
+                    error: {
                         type: 'string',
-                        example: '5eef1196042e5899f106f490',
+                        example: '',
+                    },
+                    data: {
+                        type: 'array',
+                        items: {
+                            type: 'object',
+                            properties: {
+                                id: {
+                                    type: 'string',
+                                    example: '5eef1196042e5899f106f490',
+                                },
+                                state: {
+                                    type: 'string',
+                                    example: 'technician assigned',
+                                },
+                                user: {
+                                    type: 'object',
+                                    properties: {
+                                        email: {
+                                            type: 'string',
+                                            example: 'usuario@gmail.com',
+                                        },
+                                    },
+                                },
+                                date: {
+                                    type: 'string',
+                                    example: '2020-06-22T19',
+                                },
+                            },
+                        },
                     },
                 },
             },
         },
+        host: 'localhost:3000',
+        basePath: '/api_v1',
+        schemes: ['http'],
     },
     apis: ['../api/*js'],
 };
