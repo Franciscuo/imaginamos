@@ -1,6 +1,6 @@
 # Backend TV service 
 
-En este repositorio se encuentra la prueba tecnica para backend de la empresa imaginemos
+En este repositorio se encuentra la prueba tecnica para backend de la empresa imaginamos
 
 ## Comenzando 🚀
 
