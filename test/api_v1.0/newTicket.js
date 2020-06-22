@@ -32,7 +32,6 @@ const newUser = () => {
                 data: {
                     email: 'email@correo.com',
                     password: 'contraseña',
-                    type: 0,
                 },
             })
             .then(() => {
@@ -45,15 +44,13 @@ const newUser = () => {
             });
     });
 };
-const newTechnical = () => {
+const newTechnicalAndUserLogin = () => {
     return new Promise((resolve, reject) => {
         request(app)
-            .post('/api_v1/signup')
+            .post('/api_v1/addTechnical')
             .send({
                 data: {
                     email: 'tecnico@correo.com',
-                    password: 'contraseña',
-                    type: 1,
                 },
             })
             .then(() => {
@@ -81,7 +78,7 @@ describe('v1 POST / newTicket', () => {
     });
 
     it('OK, newTicket work', done => {
-        newTechnical()
+        newTechnicalAndUserLogin()
             .then(data => {
                 request(app)
                     .post('/api_v1/newTicket')
@@ -98,7 +95,7 @@ describe('v1 POST / newTicket', () => {
     });
 
     it('FAIL, newTicket need accesToken', done => {
-        newTechnical()
+        newTechnicalAndUserLogin()
             .then(() => {
                 request(app)
                     .post('/api_v1/newTicket')

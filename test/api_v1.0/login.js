@@ -44,7 +44,6 @@ describe('v1 POST /signUp', () => {
                 data: {
                     email: 'email@correo.com',
                     password: 'contraseña',
-                    type: 0,
                 },
             })
             .then(() => funLogin())
@@ -75,7 +74,6 @@ describe('v1 POST /signUp', () => {
                 data: {
                     email: 'email@correo.com',
                     password: 'contraseña',
-                    type: 0,
                 },
             })
             .then(() => funLogin())

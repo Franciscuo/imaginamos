@@ -61,7 +61,6 @@ describe('v1 POST /logOut', () => {
                 data: {
                     email: 'email@correo.com',
                     password: 'contraseña',
-                    type: 0,
                 },
             })
             .then(() => funLogin(funLogout))
@@ -101,7 +100,6 @@ describe('v1 POST /logOut', () => {
                 data: {
                     email: 'email@correo.com',
                     password: 'contraseña',
-                    type: 0,
                 },
             })
             .then(() => funLogout(funLogin()))

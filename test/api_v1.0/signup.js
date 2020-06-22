@@ -26,7 +26,6 @@ describe('v1 POST /signUp', () => {
                 data: {
                     email: 'email@correo.com',
                     password: 'contraseña',
-                    type: 0,
                 },
             })
             .then(res => {
@@ -49,7 +48,6 @@ describe('v1 POST /signUp', () => {
                 data: {
                     email: '',
                     password: 'contraseña',
-                    type: 0,
                 },
             })
             .then(res => {
@@ -67,7 +65,6 @@ describe('v1 POST /signUp', () => {
                 data: {
                     email: 'correo@gmail.com',
                     password: '',
-                    type: 0,
                 },
             })
             .then(res => {

@@ -10,10 +10,10 @@ router.post('/signup', (req, res) => {
         userCtrl
             .signUp(email, password, type)
             .then(info => {
-                response.success(res, info, 200);
+                response.success(res, info, 201);
             })
             .catch(e => {
-                response.error(res, e, 400);
+                response.error(res, e.message, e.code);
             });
     } catch (e) {
         response.error(res, e, 500);
@@ -29,7 +29,7 @@ router.post('/login', (req, res) => {
                 response.success(res, info, 200);
             })
             .catch(e => {
-                response.error(res, e, 400);
+                response.error(res, e.message, e.code);
             });
     } catch (e) {
         response.error(res, e, 500);
@@ -46,7 +46,7 @@ router.post('/logout', (req, res) => {
                 response.success(res, info, 200);
             })
             .catch(e => {
-                response.error(res, e, 400);
+                response.error(res, e.message, e.code);
             });
     } catch (e) {
         response.error(res, e, 500);
