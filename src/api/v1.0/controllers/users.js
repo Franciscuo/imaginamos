@@ -3,19 +3,24 @@ const User = require('../../../database/models/Users');
 
 const userCtrl = {};
 
-userCtrl.signUp = (email, password, type) => {
+userCtrl.signUp = (email, password) => {
     return new Promise(async(resolve, reject) => {
         try {
             const user = await User.findOne({ email });
-            if (user) return reject('This email is already registered');
-            if (password.length < 2) return reject('Passord too short');
+            if (user)
+                return reject({
+                    message: 'This email is already registered',
+                    code: 409,
+                });
+
+            if (password.length < 2)
+                return reject({ message: 'Passord too short', code: 400 });
             const newUser = new User({
                 email,
-                type,
                 password: '',
             });
             newUser.password = await newUser.encryptPassword(password);
-            await newUser
+            newUser
                 .save()
                 .then(() => {
                     resolve({
@@ -23,10 +28,10 @@ userCtrl.signUp = (email, password, type) => {
                     });
                 })
                 .catch(() => {
-                    reject('Failed to write database');
+                    reject({ message: 'Failed to write database', code: 500 });
                 });
         } catch (e) {
-            reject(`Error ${e}`);
+            reject({ message: `Error ${e}`, code: 500 });
         }
     });
 };
@@ -35,9 +40,9 @@ userCtrl.logIn = (email, password) => {
     return new Promise(async(resolve, reject) => {
         try {
             const user = await User.findOne({ email });
-            if (!user) return reject('User not found');
+            if (!user) return reject({ message: 'User not found', code: 400 });
             const match = await user.matchPassword(password);
-            if (!match) return reject('Wrong password');
+            if (!match) return reject({ message: 'Wrong password', code: 403 });
 
             const payLoad = { id: user._id };
             const accessToken = jwt.sign(
@@ -50,8 +55,7 @@ userCtrl.logIn = (email, password) => {
             );
             user.tokens.push(refreshToken);
 
-            await user
-                .save()
+            user.save()
                 .then(() => {
                     resolve({
                         login: true,
@@ -61,10 +65,10 @@ userCtrl.logIn = (email, password) => {
                     });
                 })
                 .catch(() => {
-                    reject('Failed to write database');
+                    reject({ message: 'Failed to write database', code: 400 });
                 });
         } catch (e) {
-            reject(`Error ${e}`);
+            reject({ message: `Error ${e}`, code: 500 });
         }
     });
 };
@@ -73,23 +77,26 @@ userCtrl.logOut = (id, refreshToken) => {
     return new Promise(async(resolve, reject) => {
         try {
             const user = await User.findById(id);
-            if (!user) return reject('User not found');
+            if (!user) return reject({ message: 'User not found', code: 400 });
+
             const { tokens } = user;
             const index = tokens.indexOf(refreshToken);
-            index > -1 ? tokens.splice(index, 1) : reject('Failed to logout');
+            if (index < 0)
+                return reject({ message: 'Failed token to logout', code: 400 });
+
+            tokens.splice(index, 1);
             user.tokens = tokens;
-            await user
-                .save()
+            user.save()
                 .then(() => {
                     resolve({
                         message: 'Close session successfully',
                     });
                 })
                 .catch(() => {
-                    reject('Failed to write database');
+                    reject({ message: 'Failed to write database', code: 400 });
                 });
         } catch (e) {
-            reject(`Error ${e}`);
+            reject({ message: `Error ${e}`, code: 500 });
         }
     });
 };

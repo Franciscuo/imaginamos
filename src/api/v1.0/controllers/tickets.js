@@ -1,17 +1,21 @@
 const jwt = require('jsonwebtoken');
 const Ticket = require('../../../database/models/Tickets');
-const User = require('../../../database/models/Users');
+const Technical = require('../../../database/models/Technical');
 
 const ticketCtrl = {};
 
 ticketCtrl.newTicket = userId => {
     return new Promise(async(resolve, reject) => {
         try {
-            const technical = await User.aggregate([
-                { $match: { type: 1 } },
+            const technical = await Technical.aggregate([
                 { $sample: { size: 1 } },
             ]);
-            if (!technical) return reject(`Sytem without technicals`);
+            if (technical.length < 1)
+                return reject({
+                    message: 'Sytem without technicals',
+                    code: 409,
+                });
+
             const newTicket = new Ticket({
                 state: 'technician assigned',
                 technical: technical[0]._id,
@@ -31,11 +35,11 @@ ticketCtrl.newTicket = userId => {
                         message: 'Saved ticket',
                     });
                 })
-                .catch(e => {
-                    reject(`Failed to write database ${e}`);
+                .catch(() => {
+                    reject({ message: `Failed to write database`, code: 500 });
                 });
         } catch (e) {
-            reject(`Error ${e}`);
+            reject({ message: `Error ${e}`, code: 500 });
         }
     });
 };
