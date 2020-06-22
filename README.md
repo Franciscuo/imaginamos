@@ -18,13 +18,6 @@ Docker
 
 Peticiones de generacion de ticket y de finalizacion de sesion necesitan el token :key: de autorizacion correspondiente en el header 
 
-_En postman por ejemplo_: 
-
-![Alt text](relative/path/to/img.jpg?raw=true "Title")
-
-_Este token se obtiene de realizar el login_
-
-![Alt text](relative/path/to/img.jpg?raw=true "Title")
 
 ## Ejecutando las pruebas ⚙️
 
@@ -41,7 +34,7 @@ El despliegue atomatico de la aplicacion se hace por medio de la rama heroku :co
 
 ## Documentación 📖
 
-La documentacion correspondiente en swagger se encuentra [aqui](https://github.com/tu/proyecto/wiki)
+La documentacion correspondiente en swagger se encuentra [aqui](https://imaginamos-tv.herokuapp.com/api-docs/i)
 
 
 ## Autores ✒️
