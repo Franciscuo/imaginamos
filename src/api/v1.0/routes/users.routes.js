@@ -6,9 +6,9 @@ const userCtrl = require('../controllers/users');
 
 router.post('/signup', (req, res) => {
     try {
-        const { email, password, type } = req.body.data;
+        const { email, password } = req.body.data;
         userCtrl
-            .signUp(email, password, type)
+            .signUp(email, password)
             .then(info => {
                 response.success(res, info, 201);
             })

@@ -4,7 +4,7 @@ const User = require('../../../database/models/Users');
 const userCtrl = {};
 
 userCtrl.signUp = (email, password) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const user = await User.findOne({ email });
             if (user)
@@ -37,7 +37,7 @@ userCtrl.signUp = (email, password) => {
 };
 
 userCtrl.logIn = (email, password) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const user = await User.findOne({ email });
             if (!user) return reject({ message: 'User not found', code: 400 });
@@ -47,7 +47,8 @@ userCtrl.logIn = (email, password) => {
             const payLoad = { id: user._id };
             const accessToken = jwt.sign(
                 payLoad,
-                process.env.ACCESS_TOKEN_SECRET, { expiresIn: '45m' }
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: '45m' }
             );
             const refreshToken = jwt.sign(
                 payLoad,
@@ -74,7 +75,7 @@ userCtrl.logIn = (email, password) => {
 };
 
 userCtrl.logOut = (id, refreshToken) => {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const user = await User.findById(id);
             if (!user) return reject({ message: 'User not found', code: 400 });

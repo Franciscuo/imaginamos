@@ -1,9 +1,8 @@
 const success = (res, data, status) => {
     res.header({
-            'custom-header': '',
-        }) /
+        'custom-header': '',
+    }) /
         res.status(status || 200).send({
-            // si esta indefined status, responde 200
             error: '',
             data,
         });
