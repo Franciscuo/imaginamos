@@ -4,16 +4,10 @@ En este repositorio se encuentra la prueba tecnica para backend de la empresa im
 
 ## Comenzando 🚀
 
-Estas instrucciones permitirán obtener una copia del proyecto en funcionamiento en local para propósitos de pruebas.
+### Ejecutar localmente 📋
 
+Para ejecutar el servidor en local aparte de este repo esta la[ imagen docker](https://hub.docker.com/r/franciscuo/imaginamos-tv)
 
-### Pre-requisitos 📋
-
-_Para ejecutar el servidor en local se hace uso de docker_
-
-```
-Docker 
-```
 ### Tokens 🔧
 
 Peticiones de generacion de ticket y de finalizacion de sesion necesitan el token :key: de autorizacion correspondiente en el header 
