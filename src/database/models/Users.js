@@ -5,7 +5,6 @@ const UserSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     date: { type: Date, default: Date.now },
-    tokens: [{ type: String }],
 });
 
 UserSchema.methods.encryptPassword = async password => {
@@ -14,7 +13,7 @@ UserSchema.methods.encryptPassword = async password => {
     return hash;
 };
 
-UserSchema.methods.matchPassword = async function(password) {
+UserSchema.methods.matchPassword = async function (password) {
     const test = await bcrypt.compare(password, this.password);
     return test;
 };

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../../../database/models/Users');
+const RefreshToken = require('../../../database/models/Tokens');
 
 const userCtrl = {};
 
@@ -54,9 +55,13 @@ userCtrl.logIn = (email, password) => {
                 payLoad,
                 process.env.REFRESH_TOKEN_SECRET
             );
-            user.tokens.push(refreshToken);
+            const newRefreshToken = new RefreshToken({
+                token: refreshToken,
+                user: user._id,
+            });
 
-            user.save()
+            newRefreshToken
+                .save()
                 .then(() => {
                     resolve({
                         login: true,
@@ -80,14 +85,13 @@ userCtrl.logOut = (id, refreshToken) => {
             const user = await User.findById(id);
             if (!user) return reject({ message: 'User not found', code: 400 });
 
-            const { tokens } = user;
-            const index = tokens.indexOf(refreshToken);
-            if (index < 0)
+            const token = await RefreshToken.findOne({
+                user: user._id,
+                token: refreshToken,
+            });
+            if (!token)
                 return reject({ message: 'Failed token to logout', code: 400 });
-
-            tokens.splice(index, 1);
-            user.tokens = tokens;
-            user.save()
+            RefreshToken.deleteOne({ _id: token._id })
                 .then(() => {
                     resolve({
                         message: 'Close session successfully',
