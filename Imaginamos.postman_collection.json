@@ -1,0 +1,190 @@
+{
+	"info": {
+		"_postman_id": "96988576-753b-47fd-b5e7-61bfefd5563b",
+		"name": "Imaginamos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "signUp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"data\":{\n\t\t\"email\": \"usuario3@gmail.com\",\n\t\t\"password\": \"contraseña\"\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api_v1/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api_v1",
+						"signup"
+					]
+				},
+				"description": "Peticion post para registrar un usuario en la plataforma"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"data\":{\n\t\t\"email\": \"usuario1@gmail.com\",\n\t\t\"password\": \"contraseña\"\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api_v1/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api_v1",
+						"login"
+					]
+				},
+				"description": "Peticion post para iniciar sesion"
+			},
+			"response": []
+		},
+		{
+			"name": "logOut",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZjA1ZjcwNWE0MGYzZWQwZGFkYzhjMCIsImlhdCI6MTU5MjgxNTMzMH0.lYxAWaFdfnMXDobfv1AZcbqn237sgivtN77IHA-uERI",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"data\":{\n\t\t\"id\": \"5ef05f705a40f3ed0dadc8c0\"\n\t}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api_v1/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api_v1",
+						"logout"
+					]
+				},
+				"description": "Peticion para cerrar sesion, hace uso del token de acceso para autenticar la request"
+			},
+			"response": []
+		},
+		{
+			"name": "newTicket",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZjEwNDk1ZTNiZWZiOWYyYTA2Y2E5MCIsImlhdCI6MTU5Mjg1MzczMywiZXhwIjoxNTkyODU2NDMzfQ.-bci83XBTM-Pb9NQ0qYm6KfRJTgbUZ8OHkl-mBw9Qto",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api_v1/newTicket",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api_v1",
+						"newTicket"
+					]
+				},
+				"description": "Peticion de usuario que genera nuevo ticket, es necesario enviar token de autenticacion en el header de la peticion"
+			},
+			"response": []
+		},
+		{
+			"name": "addTechnical",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"data\":{\r\n\t\t\"email\": \"tecnico3@gmail.com\"\r\n\t}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api_v1/addTechnical",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api_v1",
+						"addTechnical"
+					]
+				},
+				"description": "Peticion para añadir un tecnico al sistema, se necesita del email."
+			},
+			"response": []
+		},
+		{
+			"name": "dayTechnical",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api_v1/dayTechnical?email=tecnico1@gmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api_v1",
+						"dayTechnical"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "tecnico1@gmail.com"
+						}
+					]
+				},
+				"description": "Peticion para obtener los servicios que tiene asignado un tecnico asociado con un email"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

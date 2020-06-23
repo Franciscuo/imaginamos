@@ -56,7 +56,6 @@ technicalCtrl.dayTechnical = email => {
                     __v: 0,
                 }
             ).populate('user', {
-                tokens: 0,
                 _id: 0,
                 password: 0,
                 date: 0,
